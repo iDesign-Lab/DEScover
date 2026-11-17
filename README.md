@@ -10,7 +10,7 @@ $$
 
 where $\mathbf{n}_v$ is the unit vector along the local vortex axis and $\mathbf{r}_f$ is the vector from the cell centre to the centre of face $f$. The candidate length scales differ only in how $\mathbf{n}_v$ is obtained from the velocity-gradient tensor. The Liutex-based length scale $\Delta_R$ gave the best results: it alleviates the delayed Kelvin–Helmholtz instability in separating shear layers and preserves the RANS shielding of attached boundary layers, without the empirical sensor of the shear-layer-adapted (SLA) length scale.
 
-> **Paper:** J. Chen, X. I. A. Yang and P. He, *Automated discovery of physically interpretable subgrid length scales for detached eddy simulation via agentic AI*, arXiv:XXXX.XXXXX (2026). Please cite it if you use this code (see [Citation](#citation)).
+> **Paper:** J. Chen, X. I. A. Yang and P. He, *Automated discovery of physically interpretable subgrid length scales for detached eddy simulation via agentic AI*, arXiv:2610.29850 (2026). Please cite it if you use this code (see [Citation](#citation)).
 
 ## Contents
 
@@ -126,7 +126,7 @@ If you use this code, please cite:
 @article{chen2026descover,
   title   = {Automated Discovery of Physically Interpretable Subgrid Length Scales for Detached Eddy Simulation via Agentic {AI}},
   author  = {Chen, Jiawei and Yang, Xiang I. A. and He, Ping},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  journal = {arXiv preprint arXiv:2610.29850},
   year    = {2026}
 }
 ```
