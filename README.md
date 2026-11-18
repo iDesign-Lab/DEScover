@@ -55,8 +55,6 @@ $\Delta_{\text{outer}}$ is selected at run time through `hmaxOuter`. Compared wi
 
 `IDDESDelta` must therefore be used with the modified `SpalartAllmarasIDDES/` provided here, whose `correct()` passes $\tilde f_d$ to the delta at every time step before the eddy viscosity is updated.
 
-> **Note on earlier versions.** The version released with arXiv v1 did not include the modified `SpalartAllmarasIDDES`, so with the standard turbulence model $\tilde f_d$ was never passed to `IDDESDelta`. In addition, `hmaxOuter` was evaluated only once, at solver start-up (and at each restart), instead of at every time step. The Liutex and swirl axes were also computed from the transpose of the velocity-gradient tensor, and the Liutex cubic solve had sign errors. These are fixed in the current version.
-
 ## Requirements
 
 - OpenFOAM **v2312** (www.openfoam.com). Other ESI versions with the `LESdelta` framework may work but have not been tested.
