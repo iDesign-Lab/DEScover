@@ -8,29 +8,29 @@ $$
 \Delta_{\perp} = C_\delta \max_f \left( 2\,\lvert \mathbf{n}_v \times \mathbf{r}_f \rvert \right), \qquad C_\delta = 1.035,
 $$
 
-where $\mathbf{n}_v$ is the unit vector along the local vortex axis and $\mathbf{r}_f$ is the vector from the cell centre to the centre of face $f$. The candidate length scales differ only in how $\mathbf{n}_v$ is obtained from the velocity-gradient tensor. The Liutex-based length scale $\Delta_R$ gave the best results: it alleviates the delayed Kelvin–Helmholtz instability in separating shear layers and preserves the RANS shielding of attached boundary layers, without the empirical sensor of the shear-layer-adapted (SLA) length scale.
+where $`\mathbf{n}_v`$ is the unit vector along the local vortex axis and $`\mathbf{r}_f`$ is the vector from the cell centre to the centre of face $`f`$. The candidate length scales differ only in how $`\mathbf{n}_v`$ is obtained from the velocity-gradient tensor. The Liutex-based length scale $`\Delta_R`$ gave the best results: it alleviates the delayed Kelvin–Helmholtz instability in separating shear layers and preserves the RANS shielding of attached boundary layers, without the empirical sensor of the shear-layer-adapted (SLA) length scale.
 
 > **Paper:** J. Chen, X. I. A. Yang and P. He, *Automated discovery of physically interpretable subgrid length scales for detached eddy simulation via agentic AI*, arXiv:2610.29850 (2026). Please cite it if you use this code (see [Citation](#citation)).
 
 ## Contents
 
-| Directory | OpenFOAM type name | Vortex axis $\mathbf{n}_v$ | Length scale in the paper |
+| Directory | OpenFOAM type name | Vortex axis $`\mathbf{n}_v`$ | Length scale in the paper |
 |---|---|---|---|
-| `DeltaLiutexTildeDelta/` | `DeltaLiutexTilde` | Liutex (Rortex) vector, sign-aligned with vorticity | $\Delta_R$ (**recommended**) |
-| `DeltaSwirlDelta/` | `DeltaSwirlDelta` | real eigenvector of $\nabla\mathbf{u}$ (swirling strength, $\lambda_{ci}$) | $\Delta_{\text{swirl}}$ |
-| `DeltaLambda2Delta/` | `DeltaLambda2Delta` | eigenvector of $\mathbf{S}^2+\boldsymbol{\Omega}^2$ for its largest eigenvalue ($\lambda_2$ criterion) | $\Delta_{\lambda_2}$ |
+| `DeltaLiutexTildeDelta/` | `DeltaLiutexTilde` | Liutex (Rortex) vector, sign-aligned with vorticity | $`\Delta_R`$ (**recommended**) |
+| `DeltaSwirlDelta/` | `DeltaSwirlDelta` | real eigenvector of $`\nabla\mathbf{u}`$ (swirling strength, $`\lambda_{ci}`$) | $`\Delta_{\text{swirl}}`$ |
+| `DeltaLambda2Delta/` | `DeltaLambda2Delta` | eigenvector of $`\mathbf{S}^2+\boldsymbol{\Omega}^2`$ for its largest eigenvalue ($`\lambda_2`$ criterion) | $`\Delta_{\lambda_2}`$ |
 | `IDDESDelta/` | `IDDESDelta` | modified IDDES filter width (see below) | — |
-| `SpalartAllmarasIDDES/` | `SpalartAllmarasIDDES` | modified to pass $\tilde f_d$ to `IDDESDelta` | — |
+| `SpalartAllmarasIDDES/` | `SpalartAllmarasIDDES` | modified to pass $`\tilde f_d`$ to `IDDESDelta` | — |
 
-The vorticity-based length scale $\Delta_\omega$ and the SLA length scale $\Delta_{\text{SLA}}$ used for comparison in the paper are available in OpenFOAM v2312 as `DeltaOmegaTilde` and `SLADelta`.
+The vorticity-based length scale $`\Delta_\omega`$ and the SLA length scale $`\Delta_{\text{SLA}}`$ used for comparison in the paper are available in OpenFOAM v2312 as `DeltaOmegaTilde` and `SLADelta`.
 
 ### Fallback in non-vortical cells
 
 | Length scale | Behaviour where no vortex axis exists |
 |---|---|
-| `DeltaLiutexTilde` | $\mathbf{n}_R=\mathbf{0}$, so $\Delta_R=0$; the outer length scale is then given by the lower bound $C_{\text{lim}}V^{1/3}$ of `IDDESDelta` |
-| `DeltaSwirlDelta` | falls back to $C_\delta\max_f(2\lvert\mathbf{r}_f\rvert)$, i.e. $C_\delta\Delta_{\max}$ on hexahedral cells |
-| `DeltaLambda2Delta` | no fallback needed ($\mathbf{S}^2+\boldsymbol{\Omega}^2$ is real symmetric) |
+| `DeltaLiutexTilde` | $`\mathbf{n}_R=\mathbf{0}`$, hence $`\Delta_R=0`$. The outer length scale is then set by the lower bound $`C_{\text{lim}}V^{1/3}`$ in `IDDESDelta`. |
+| `DeltaSwirlDelta` | Falls back to $`C_\delta \max_f 2\lvert\mathbf{r}_f\rvert`$, which equals $`C_\delta \Delta_{\max}`$ on hexahedral cells. |
+| `DeltaLambda2Delta` | No fallback needed, since $`\mathbf{S}^2+\boldsymbol{\Omega}^2`$ is real symmetric and always has a real eigenvector. |
 
 ### Modified `IDDESDelta`
 
@@ -46,14 +46,15 @@ $$
 \end{cases}
 $$
 
-where $\tilde f_d = \max(1-f_{dt},\ f_B)$ is the IDDES blending function of Shur et al. (2008), with $f_{dt} = 1-\tanh\left[(C_{dt1} r_{dt})^{C_{dt2}}\right]$. $\tilde f_d$ tends to 1 in the RANS (shielded) region and to 0 in the LES region away from walls.
-$\Delta_{\text{outer}}$ is selected at run time through `hmaxOuter`. Compared with the standard OpenFOAM `IDDESDelta`, this version
+where $`\tilde f_d = \max(1-f_{dt},\ f_B)`$ is the IDDES blending function of Shur et al. (2008), with $`f_{dt} = 1-\tanh\left[(C_{dt1} r_{dt})^{C_{dt2}}\right]`$. $`\tilde f_d`$ tends to 1 in the RANS (shielded) region and to 0 in the LES region away from walls.
+$`\Delta_{\text{outer}}`$ is selected at run time through `hmaxOuter`. Compared with the standard OpenFOAM `IDDESDelta`, this version
 
 - adds the run-time selectable outer length scale `hmaxOuter` (defaults to `hmax`, i.e. the standard IDDES);
-- restricts the outer length scale to $\Delta_{\max}$ where $\tilde f_d \ge$ `fdLimit` (default 0.01) and bounds it from below by `Clim`$\,V^{1/3}$ (default 0.15) elsewhere;
-- receives $\tilde f_d$ from the turbulence model through `updateFd()`, and re-evaluates `hmaxOuter` at every time step (in `correct()`).
+- restricts the outer length scale to $`\Delta_{\max}`$ where $`\tilde f_d \ge \varepsilon`$ (`fdLimit`, default 0.01) and bounds it from below by $`C_{\text{lim}}V^{1/3}`$ elsewhere (`Clim`, default 0.15);
+- receives $`\tilde f_d`$ from the turbulence model through `updateFd()`, and re-evaluates `hmaxOuter` at every time step (in `correct()`).
 
-`IDDESDelta` must therefore be used with the modified `SpalartAllmarasIDDES/` provided here, whose `correct()` passes $\tilde f_d$ to the delta at every time step before the eddy viscosity is updated.
+`IDDESDelta` must therefore be used with the modified `SpalartAllmarasIDDES/` provided here, whose `correct()` passes $`\tilde f_d`$ to the delta at every time step before the eddy viscosity is updated.
+
 
 ## Requirements
 
@@ -81,7 +82,7 @@ $\Delta_{\text{outer}}$ is selected at run time through `hmaxOuter`. Compared wi
 
 ## Usage
 
-Select the modified `IDDESDelta` in `constant/turbulenceProperties` and choose the outer length scale with `hmaxOuter`. Example for $\Delta_R$, as used in the paper:
+Select the modified `IDDESDelta` in `constant/turbulenceProperties` and choose the outer length scale with `hmaxOuter`. Example for $`\Delta_R`$, as used in the paper:
 
 ```cpp
 simulationType  LES;
@@ -111,16 +112,16 @@ LES
 }
 ```
 
-Use `hmaxOuter DeltaSwirlDelta;` or `hmaxOuter DeltaLambda2Delta;` (with the corresponding `...Coeffs` sub-dictionary) to run the other candidates. Without `hmaxOuter`, the standard IDDES length scale ($\Delta_{\max}$) is recovered.
+Use `hmaxOuter DeltaSwirlDelta;` or `hmaxOuter DeltaLambda2Delta;` (with the corresponding `...Coeffs` sub-dictionary) to run the other candidates. Without `hmaxOuter`, the standard IDDES length scale ($`\Delta_{\max}`$) is recovered.
 
 ## Test cases
 
 The length scales were evaluated on four cases of increasing complexity:
 
-1. zero-pressure-gradient flat-plate boundary layer, $Re_L = 10^7$;
-2. backward-facing step of Vogel & Eaton (1985), $Re_H = 28\,000$;
-3. free shear layer of Delville (1995), $U_1 = 41.54$ m/s, $U_2 = 22.40$ m/s;
-4. GLC305 airfoil with the 944 glaze-ice shape, $Re_c = 3.5\times10^6$, $\alpha = 6^\circ$.
+1. zero-pressure-gradient flat-plate boundary layer, $`Re_L = 10^7`$;
+2. backward-facing step of Vogel & Eaton (1985), $`Re_H = 28\,000`$;
+3. free shear layer of Delville (1995), $`U_1 = 41.54`$ m/s, $`U_2 = 22.40`$ m/s;
+4. GLC305 airfoil with the 944 glaze-ice shape, $`Re_c = 3.5\times10^6`$, $`\alpha = 6^\circ`$.
 
 ## Citation
 
